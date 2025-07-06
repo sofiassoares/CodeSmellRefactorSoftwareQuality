@@ -9,28 +9,49 @@ public class SearchLog {
     private List<String> searchHistory;
     private Map<String, Integer> searchCount;
     private boolean isLocked;
-    private Integer numUsages;
+    private int numUsages;
     private String logName;
 
     public SearchLog(String logName) {
-        searchHistory = new ArrayList<>();
-        searchCount = new HashMap<>();
+        this.searchHistory = new ArrayList<>();
+        this.searchCount = new HashMap<>();
         this.logName = logName;
-        numUsages = 0;
-        isLocked = false;
+        this.numUsages = 0;
+        this.isLocked = false;
     }
-    public void addSearchHistory(String searchHistory) {
-        this.searchHistory.add(searchHistory);
+
+    /**
+     * Preferred method going forward – encapsulates all behavior.
+     */
+    public void addSearch(String searchQuery) {
+        if (isLocked) {
+            throw new IllegalStateException("Search log is locked. Cannot add new searches.");
+        }
+        searchHistory.add(searchQuery);
+        searchCount.put(searchQuery, searchCount.getOrDefault(searchQuery, 0) + 1);
+        numUsages++;
     }
+
+    /**
+     * Backward compatible method used by legacy code like GeneralSearch.
+     */
+    public void addSearchHistory(String searchQuery) {
+        searchHistory.add(searchQuery);
+        searchCount.put(searchQuery, searchCount.getOrDefault(searchQuery, 0) + 1);
+    }
+
     public List<String> getSearchHistory() {
-        return searchHistory;
+        return new ArrayList<>(searchHistory);
     }
+
     public void setSearchHistory(List<String> searchHistory) {
         this.searchHistory = searchHistory;
     }
+
     public Map<String, Integer> getSearchCount() {
-        return searchCount;
+        return new HashMap<>(searchCount);
     }
+
     public void setSearchCount(Map<String, Integer> searchCount) {
         this.searchCount = searchCount;
     }
@@ -43,7 +64,7 @@ public class SearchLog {
         isLocked = locked;
     }
 
-    public Integer getNumUsages() {
+    public int getNumUsages() {
         return numUsages;
     }
 
@@ -57,5 +78,14 @@ public class SearchLog {
 
     public void setLogName(String logName) {
         this.logName = logName;
+    }
+
+    public void clearLog() {
+        if (isLocked) {
+            throw new IllegalStateException("Cannot clear a locked log.");
+        }
+        searchHistory.clear();
+        searchCount.clear();
+        numUsages = 0;
     }
 }
