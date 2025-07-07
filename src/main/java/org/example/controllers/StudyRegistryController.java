@@ -53,15 +53,35 @@ public class StudyRegistryController {
         studyTaskManager.addRegistry(task);
     }
 
-    private void handleSetObjective(StudyObjective objective){
+    private void handleSetObjective(StudyObjective objective) {
         handleMethodHeader("(Study Objective Edit)");
-        System.out.println("Type the following info: Integer id, Integer priority " +
-                "Integer practicedDays, int day, int month, int year, String name, String title, String description, " +
-                "String topic, String objectiveInOneLine, String objectiveFullDescription, String motivation, " +
-                "Double duration, boolean isActive  \n");
-        objective.handleSetObjective(Integer.parseInt(getInput()), Integer.parseInt(getInput()),Integer.parseInt(getInput()),Integer.parseInt(getInput()),Integer.parseInt(getInput()),
-                Integer.parseInt(getInput()), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(),
-                Double.parseDouble(getInput()), Boolean.parseBoolean(getInput()));
+
+        System.out.println("Type the following info: Integer id, Integer priority, String name, boolean isActive");
+        Integer id = Integer.parseInt(getInput());
+        Integer priority = Integer.parseInt(getInput());
+        String name = getInput();
+        boolean isActive = Boolean.parseBoolean(getInput());
+
+        System.out.println("Now enter: title, description, topic, objectiveInOneLine, objectiveFullDescription, motivation");
+        String title = getInput();
+        String description = getInput();
+        String topic = getInput();
+        String objectiveInOneLine = getInput();
+        String objectiveFullDescription = getInput();
+        String motivation = getInput();
+
+        TextualInfo textualInfo = TextualInfo.from(title, description, topic, objectiveInOneLine, objectiveFullDescription, motivation);
+
+        System.out.println("Now enter: practicedDays, day, month, year, duration");
+        Integer practicedDays = Integer.parseInt(getInput());
+        int day = Integer.parseInt(getInput());
+        int month = Integer.parseInt(getInput());
+        int year = Integer.parseInt(getInput());
+        Double duration = Double.parseDouble(getInput());
+
+        TimeInfo timeInfo = new TimeInfo(practicedDays, day, month, year, duration);
+
+        objective.handleSetObjective(id, priority, name, isActive, textualInfo, timeInfo);
     }
 
     private StudyObjective getStudyObjectiveInfo(){
