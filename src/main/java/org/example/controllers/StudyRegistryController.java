@@ -105,18 +105,25 @@ public class StudyRegistryController {
         return plan;
     }
 
-    private void handleSetSteps(StudyPlan studyPlan){
+    private void handleSetSteps(StudyPlan studyPlan) {
         handleMethodHeader("(Study Plan Edit)");
         System.out.println("Type the following info: String firstStep, String resetStudyMechanism, String consistentStep, " +
                 "String seasonalSteps, String basicSteps, String mainObjectiveTitle, String mainGoalTitle, String mainMaterialTopic, " +
                 "String mainTask, @NotNull  Integer numberOfSteps, boolean isImportant. " +
                 "The Date to start is today, the date to end is x days from now, type the quantity of days\n");
         LocalDateTime createdAT = LocalDateTime.now();
-        studyPlan.assignSteps(getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(), getInput(),
-                Integer.parseInt(getInput()), Boolean.parseBoolean(getInput()), createdAT, createdAT.plusDays(Long.parseLong(getInput())));
+        List<String> stepInputs = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            stepInputs.add(getInput());
+        }
+        int numberOfSteps = Integer.parseInt(getInput());
+        boolean isImportant = Boolean.parseBoolean(getInput());
+        long days = Long.parseLong(getInput());
+
+        studyPlan.assignStepsFromInputs(stepInputs, numberOfSteps, isImportant, createdAT, createdAT.plusDays(days));
     }
 
-    private StudyGoal getStudyGoalInfo(){
+        private StudyGoal getStudyGoalInfo(){
         handleMethodHeader("(Study Goal Creation)");
         System.out.println("Type the following info: name \n");
         String name = getInput();
