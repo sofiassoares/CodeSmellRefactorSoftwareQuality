@@ -1,5 +1,6 @@
 package org.example.studysearch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeneralSearch implements Search<String> {
@@ -16,8 +17,18 @@ public class GeneralSearch implements Search<String> {
         return searchLog;
     }
 
-    // Retained for compatibility, but now delegates to SearchLog
+    // ✅ Replace with your actual search logic
     private List<String> handleSearch(String text) {
-        return searchLog.performSearch(text);
+        List<String> coreResults = performGeneralSearchLogic(text);
+        return searchLog.performSearch(text, coreResults);
+    }
+
+    private List<String> performGeneralSearchLogic(String text) {
+        // Stub logic — replace this with real search implementation
+        List<String> dummyResults = new ArrayList<>();
+        if (text.toLowerCase().contains("example")) {
+            dummyResults.add("Example match found");
+        }
+        return dummyResults;
     }
 }

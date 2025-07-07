@@ -2,7 +2,6 @@ package org.example.studysearch;
 
 import org.example.studyregistry.StudyMaterial;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MaterialSearch implements Search<String> {
@@ -20,13 +19,8 @@ public class MaterialSearch implements Search<String> {
         return searchLog;
     }
 
+    // ✅ Delegates to SearchLog for actual logic
     private List<String> handleMaterialSearch(String text) {
-        List<String> results = new ArrayList<>();
-        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
-
-        searchLog.addSearch(text); // ✅ New preferred method
-        results.add(searchLog.getLogEntry()); // ✅ Encapsulated log message
-
-        return results;
+        return searchLog.performMaterialSearch(text);
     }
 }

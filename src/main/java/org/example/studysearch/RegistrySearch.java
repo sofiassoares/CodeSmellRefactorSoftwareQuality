@@ -24,14 +24,15 @@ public class RegistrySearch implements Search<String> {
 
     private List<String> handleRegistrySearch(String text) {
         List<String> results = new ArrayList<>();
+
         results.addAll(CardManager.getCardManager().searchInCards(text));
         results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
         results.addAll(TodoTracker.getInstance().searchInTodos(text));
         results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
 
-        this.searchLog.addSearch(text); // ✅ preferred method
+        searchLog.addSearchHistory(text);                   // ✅ Replaced addSearch
+        results.add(searchLog.getLastSearchEntry());        // ✅ Replaced getLogEntry
 
-        results.add(searchLog.getLogEntry()); // ✅ encapsulated log message
         return results;
     }
 }
