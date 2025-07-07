@@ -1,7 +1,5 @@
 package org.example.studysearch;
 
-import org.example.studyregistry.StudyMaterial;
-
 import java.util.List;
 
 public class MaterialSearch implements Search<String> {
@@ -19,7 +17,7 @@ public class MaterialSearch implements Search<String> {
         return searchLog;
     }
 
-    // ✅ Delegates to SearchLog for actual logic
+    // Delegates logic to SearchLog
     private List<String> handleMaterialSearch(String text) {
         return searchLog.performMaterialSearch(text);
     }
