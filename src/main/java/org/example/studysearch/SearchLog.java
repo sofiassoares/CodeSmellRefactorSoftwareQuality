@@ -1,5 +1,11 @@
 package org.example.studysearch;
 
+import org.example.studycards.CardManager;
+import org.example.studyplanner.HabitTracker;
+import org.example.studyplanner.TodoTracker;
+import org.example.studyregistry.StudyMaterial;
+import org.example.studyregistry.StudyTaskManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +27,23 @@ public class SearchLog {
     }
 
     /**
-     * Preferred method going forward – encapsulates all behavior.
+     * New high-level search method used by GeneralSearch.
+     */
+    public List<String> performSearch(String text) {
+        List<String> results = new ArrayList<>();
+        results.addAll(CardManager.getCardManager().searchInCards(text));
+        results.addAll(HabitTracker.getHabitTracker().searchInHabits(text));
+        results.addAll(TodoTracker.getInstance().searchInTodos(text));
+        results.addAll(StudyMaterial.getStudyMaterial().searchInMaterials(text));
+        results.addAll(StudyTaskManager.getStudyTaskManager().searchInRegistries(text));
+
+        this.addSearch(text);
+        results.add(getLogEntry());
+        return results;
+    }
+
+    /**
+     * Preferred method – fully encapsulates logging behavior.
      */
     public void addSearch(String searchQuery) {
         if (isLocked) {
@@ -33,11 +55,15 @@ public class SearchLog {
     }
 
     /**
-     * Backward compatible method used by legacy code like GeneralSearch.
+     * Legacy method kept for test compatibility.
      */
     public void addSearchHistory(String searchQuery) {
         searchHistory.add(searchQuery);
         searchCount.put(searchQuery, searchCount.getOrDefault(searchQuery, 0) + 1);
+    }
+
+    public String getLogEntry() {
+        return "\nLogged in: " + logName;
     }
 
     public List<String> getSearchHistory() {
