@@ -3,11 +3,7 @@ package org.example.controllers;
 import org.example.studyplanner.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
+import java.util.*;
 
 public class StudyPlannerController {
     private Map<String, Runnable> actions = new HashMap<>();
@@ -42,7 +38,6 @@ public class StudyPlannerController {
         actions.put("22", this::handleRemoveHabit);
         actions.put("23", this::handleViewHabits);
     }
-
 
     private void handleViewMenuOptions() {
         actions.put("31", () -> {
@@ -100,24 +95,36 @@ public class StudyPlannerController {
         todoTracker.addToDo(title, description, priority);
     }
 
-    private LocalDateTime handleGetStartDate(){
-        int year = Integer.parseInt(getInput());
-        int month = Integer.parseInt(getInput());
-        int day = Integer.parseInt(getInput());
-        int hour = Integer.parseInt(getInput());
-        int minute = Integer.parseInt(getInput());
-        int seconds = Integer.parseInt(getInput());
-        return LocalDateTime.of(year, month, day, hour, minute, seconds);
+    private void handleAddHabit() {
+        HabitCreationRequest request = buildHabitRequest(collectHabitInput());
+        habitTracker.addHabit(request);
     }
 
-    private void handleAddHabit(){
+    private List<String> collectHabitInput() {
         System.out.println("Separate the input with enter, type: name, motivation, daily Minutes Dedication, daily Hours Dedication, year, month, day, hour, minute, seconds");
-        String name = Objects.requireNonNull(this.getInput().trim());
-        String motivation = Objects.requireNonNull(this.getInput().trim());
-        Integer dailyMinutesDedication = Integer.parseInt(Objects.requireNonNull(this.getInput().trim()));
-        Integer dailyHoursDedication = Integer.parseInt(Objects.requireNonNull(this.getInput().trim()));
-        LocalDateTime start =  handleGetStartDate();
-        habitTracker.addHabit(name, motivation, dailyMinutesDedication, dailyHoursDedication, start.getYear(), start.getMonthValue(), start.getDayOfMonth(), start.getHour(), start.getMinute(), start.getSecond(), false);
+        List<String> inputs = new ArrayList<>();
+        for (int i = 0; i < 11; i++) {
+            inputs.add(Objects.requireNonNull(this.getInput().trim()));
+        }
+        return inputs;
+    }
+
+    private HabitCreationRequest buildHabitRequest(List<String> inputs) {
+        return new HabitCreationRequest.Builder()
+                .withName(inputs.get(0))
+                .withMotivation(inputs.get(1))
+                .withDailyMinutesDedication(Integer.parseInt(inputs.get(2)))
+                .withDailyHoursDedication(Integer.parseInt(inputs.get(3)))
+                .withDateTime(
+                        Integer.parseInt(inputs.get(4)),
+                        Integer.parseInt(inputs.get(5)),
+                        Integer.parseInt(inputs.get(6)),
+                        Integer.parseInt(inputs.get(7)),
+                        Integer.parseInt(inputs.get(8)),
+                        Integer.parseInt(inputs.get(9))
+                )
+                .withIsConcluded(false)
+                .build();
     }
 
     private String viewToDoHeader(){
@@ -128,7 +135,6 @@ public class StudyPlannerController {
         System.out.println(viewToDoHeader());
         System.out.println(todoTracker.toString());
     }
-
 
     private String viewHabitHeader(){
         return "Habits found: ";
