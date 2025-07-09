@@ -9,7 +9,6 @@ public class HabitTracker {
     private List<Habit> habits;
     private Map<Integer, List<LocalDateTime>> tracker;
     private Integer nextId;
-
     private static HabitTracker instance;
 
     public static HabitTracker getHabitTracker() {
@@ -116,5 +115,24 @@ public class HabitTracker {
             }
         }
         return result;
+    }
+
+    // ✅ Moved from TimelineView
+    public String generateHabitTimelineView() {
+        StringBuilder response = new StringBuilder();
+        for (Habit habit : this.getHabits()) {
+            response.append("[ Habit: ")
+                    .append(habit.getName())
+                    .append(". Records: ");
+            List<LocalDateTime> records = this.getHabitRecords(habit.getId());
+            for (LocalDateTime record : records) {
+                response.append(this.formatHabitDate(record)).append(", ");
+            }
+            if (!records.isEmpty()) {
+                response.setLength(response.length() - 2); // remove trailing comma
+            }
+            response.append(" ]\n");
+        }
+        return response.toString();
     }
 }

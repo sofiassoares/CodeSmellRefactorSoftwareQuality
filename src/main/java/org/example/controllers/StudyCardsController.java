@@ -25,7 +25,7 @@ public class StudyCardsController {
         this.leitnerSystem = leitnerSystem;
     }
 
-    void assignActions(){
+    void assignActions() {
         actions.put("1", this::handleViewCards);
         actions.put("2", this::handleCreateCard);
         actions.put("3", this::handleRemoveCard);
@@ -38,24 +38,25 @@ public class StudyCardsController {
         actions.put("10", this::handleGetRandomCardFromBox);
     }
 
-    public void handleViewCards(){
+    public void handleViewCards() {
         Map<Integer, Card> cards = manager.getCardsMap();
         List<Integer> keys = new ArrayList<>(cards.keySet());
         StringBuilder response = new StringBuilder();
-        for(Integer key : keys){
+        for (Integer key : keys) {
             Card card = cards.get(key);
-            response.append("[id: ").append(key).append("] Question: ").append(card.getQuestion()).append(", Answer: ").append(card.getAnswer()).append("\n");
+            response.append("[id: ").append(key).append("] Question: ")
+                    .append(card.getQuestion()).append(", Answer: ").append(card.getAnswer()).append("\n");
         }
         System.out.println(response.toString().isEmpty() ? "No cards" : response.toString());
     }
 
-    public void handleRemoveCard(){
+    public void handleRemoveCard() {
         System.out.println("Type card id:");
         int id = Integer.parseInt(getInput());
         manager.removeCard(id);
     }
 
-    public void handleCreateCard(){
+    public void handleCreateCard() {
         System.out.println("Type the question: \n");
         String question = getInput();
         System.out.println("Type the answer: \n");
@@ -65,11 +66,10 @@ public class StudyCardsController {
 
     public void handleRandomFlashCard() {
         System.out.println("Random flash card:");
-        Integer id = flashCard.randomFlashCard();
-        System.out.println(manager.formatCard(id));
+        System.out.println(flashCard.getFormattedRandomCard());
     }
 
-    public void handleInsertCardInBox(){
+    public void handleInsertCardInBox() {
         System.out.println("Type card id:");
         int id = Integer.parseInt(getInput());
         System.out.println("Type box(0-4):");
@@ -77,7 +77,7 @@ public class StudyCardsController {
         leitnerSystem.addCardToBox(id, box);
     }
 
-    public void handleRemoveCardFromBox(){
+    public void handleRemoveCardFromBox() {
         System.out.println("Type card id:");
         int id = Integer.parseInt(getInput());
         System.out.println("Type box(0-4):");
@@ -85,65 +85,63 @@ public class StudyCardsController {
         leitnerSystem.removeCardFromBox(id, box);
     }
 
-    public void handleViewBoxes(){
+    public void handleViewBoxes() {
         System.out.println(leitnerSystem.toString());
     }
 
     public void handleUpgradeCardFromBox() {
-        try{
+        try {
             System.out.println("Type card id:");
             int id = Integer.parseInt(getInput());
             System.out.println("Type box(0-4):");
             int box = Integer.parseInt(getInput());
             leitnerSystem.upgradeCard(id, box);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public void handleDowngradeCardFromBox() {
-        try{
+        try {
             System.out.println("Type card id:");
             int id = Integer.parseInt(getInput());
             System.out.println("Type box(0-4):");
             int box = Integer.parseInt(getInput());
             leitnerSystem.downgradeCard(id, box);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+    // ✅ Re-added method
     public String getRandomCardFromBox() {
-        String response = "";
-        response += leitnerSystem.getMethodName();
-        List<Box> boxes = leitnerSystem.getBoxes();
-        response += leitnerSystem.getRandomCard(boxes);
-        return response;
+        return leitnerSystem.getFormattedRandomCardFromAllBoxes();
     }
 
     public void handleGetRandomCardFromBox() {
-        try{
-            String response = getRandomCardFromBox();
-            System.out.println(response);
-        }catch (Exception e){
+        try {
+            System.out.println(getRandomCardFromBox());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void handleCardsInput(){
-        try{
-            while(true){
+    public void handleCardsInput() {
+        try {
+            while (true) {
                 controllerOptions();
                 String response = validateInput(actions);
-                if(response == null) {return;}
+                if (response == null) {
+                    return;
+                }
                 actions.get(response).run();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static void controllerOptions(){
+    public static void controllerOptions() {
         System.out.println("""
                 0 - return
                 1 - view cards

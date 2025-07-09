@@ -80,6 +80,21 @@ public class LeitnerSystem extends StudyMethod {
                 cardId, card.getQuestion(), card.getAnswer());
     }
 
+    public String getFormattedRandomCardFromAllBoxes() {
+        StringBuilder response = new StringBuilder();
+        response.append(getMethodName()).append("\n");
+
+        if (!isValidBoxList(this.boxes)) {
+            response.append("No boxes available.");
+            return response.toString();
+        }
+
+        Box mergedBox = mergeBoxes(this.boxes);
+        Integer randomCardId = mergedBox.getRandomCard();
+        response.append(buildCardResponse(randomCardId));
+        return response.toString();
+    }
+
     public void addCardToBox(Integer id, Integer boxId) {
         this.boxes.get(boxId).addCard(id);
     }
